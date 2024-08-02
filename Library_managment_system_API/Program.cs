@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ContextDb>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
 });
 
-//for connect with clint access
+//for connect with clintsite access
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("myCorsPolicy", policy =>
@@ -25,6 +25,9 @@ builder.Services.AddCors(o =>
     });
 });
 
+
+// for register and email services
+builder.Services.AddScoped<EmailService>();
 
 
 var app = builder.Build();
