@@ -9,13 +9,15 @@ namespace Library_managment_system_API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public AuthController(ContextDb contextDb, EmailService emailService)
+        public AuthController(ContextDb contextDb, EmailService emailService, JWTServices jWTServices)
         {
             ContextDb = contextDb;
             EmailService = emailService;
+            JWTServices = jWTServices;
         }
         public ContextDb ContextDb { get; }
         public EmailService EmailService { get; }
+        public JWTServices JWTServices { get; }
 
         [HttpPost("Register")]
         public IActionResult Register(User user)
@@ -51,6 +53,27 @@ namespace Library_managment_system_API.Controllers
 
 
         }
+
+
+        [HttpGet("Login")]
+        public IActionResult Login(string email, string password )
+        {
+            if (ContextDb.Users.Any(us => us.Email.Equals(email) && us.Password.Equals(password)))
+            {
+                var user = ContextDb.Users.Single(user => user.Email.Equals(email) && user.Password.Equals(password));
+
+                if (user.AccountStatus == AccountStatus.UNAPROVED)
+                {
+                    return Ok("Not approved from Admin");
+                }
+                return Ok(JWTServices.GenerateToken(user));
+            
+            }
+            return Ok("Not found");
+            
+        }
+
+
 
     }
 }
