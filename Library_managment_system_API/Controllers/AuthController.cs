@@ -64,12 +64,12 @@ namespace Library_managment_system_API.Controllers
 
                 if (user.AccountStatus == AccountStatus.UNAPROVED)
                 {
-                    return Ok("Not approved from Admin");
+                    return Ok("Not approved");
                 }
                 return Ok(JWTServices.GenerateToken(user));
             
             }
-            return Ok("Not found");
+            return Ok("not found");
             
         }
 

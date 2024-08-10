@@ -37,11 +37,11 @@ namespace Library_managment_system_API.Entities
             });
 
             modelBuilder.Entity<BookCategory>().HasData(
-                new BookCategory() { Id = 1, Catagory = "Computer", SubCatagory = "DataStructure" },
-                new BookCategory() { Id = 2, Catagory = "Mechanical", SubCatagory = "Machine" },
-                 new BookCategory() { Id = 3, Catagory = "Methamatics", SubCatagory = "Calculas" },
-                  new BookCategory() { Id = 4, Catagory = "Methamatics", SubCatagory = "Algebra" },
-                  new BookCategory() { Id = 5, Catagory = "Computer", SubCatagory = "C# Programing" }
+                new BookCategory() { Id = 1, Category = "Computer", SubCategory = "DataStructure" },
+                new BookCategory() { Id = 2, Category = "Mechanical", SubCategory = "Machine" },
+                 new BookCategory() { Id = 3, Category = "Methamatics", SubCategory = "Calculas" },
+                  new BookCategory() { Id = 4, Category = "Methamatics", SubCategory = "Algebra" },
+                  new BookCategory() { Id = 5, Category = "Computer", SubCategory = "C# Programing" }
 
                 );
 

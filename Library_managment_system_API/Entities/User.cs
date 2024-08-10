@@ -38,9 +38,9 @@
     {
         public int Id { get; set; }
 
-        public string Catagory { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
 
-        public string SubCatagory { get; set; } = string.Empty;
+        public string SubCategory { get; set; } = string.Empty;
     }
 
     public class Book
@@ -57,7 +57,7 @@
 
         public int BookCategoryId {  get; set; }
 
-        public BookCategory?BbookCategory { get; set; }
+        public BookCategory?BookCategory { get; set; }
 
 
     }
