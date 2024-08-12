@@ -58,5 +58,26 @@ namespace Library_managment_system_API.Controllers
             }
             return Ok("Can not order");
         }
+
+        [Authorize]
+        [HttpPost("AddCategory")]
+        public IActionResult AddCategory(BookCategory bookCategory)
+        {
+            var exists = Context.BookCategories.Any(bcat => bcat.Category == bookCategory.Category && bcat.SubCategory == bookCategory.SubCategory);
+            if(exists)
+            {
+                return Ok("cannot insert");
+            }
+            else
+            {
+                Context.BookCategories.Add(new()
+                {
+                    Category = bookCategory.Category,
+                    SubCategory = bookCategory.SubCategory
+                });
+                Context.SaveChanges();
+                return Ok("Inserted");
+            }
+        }
     }
 }
