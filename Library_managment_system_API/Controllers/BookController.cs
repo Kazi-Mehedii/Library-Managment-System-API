@@ -79,5 +79,27 @@ namespace Library_managment_system_API.Controllers
                 return Ok("Inserted");
             }
         }
+
+        [Authorize]
+        [HttpGet("GetCategory")]
+        public IActionResult GetCategory()
+        {
+            var category = Context.BookCategories.ToList();
+            if (category.Any())
+            {
+                return Ok(category);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
+        [HttpPost("AddNewBook")]
+        public IActionResult AddNewBook(Book book)
+        {
+            book.BookCategory = null;
+            Context.Books.Add(book);
+            Context.SaveChanges();
+            return Ok("inserted");
+        }
     }
 }
