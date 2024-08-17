@@ -28,36 +28,7 @@ namespace Library_managment_system_API.Controllers
             return NotFound();
         }
 
-        [Authorize]
-        [HttpPost("OrderBook")]
-        public IActionResult OrderBook(int userId, int bookId)
-        {
-            var userOrder = Context.Orders.Count(o => o.UserId == userId && !o.Returned) < 3;
-            if (userOrder)
-            {
-                Context.Orders.Add(new()
-                {
-                    UserId = userId,
-                    BookId = bookId,
-                    OrderDate = DateTime.Now,
-                    ReturnDate = null,
-                    Returned = false,
-                    FinePaid = 0
-
-
-                });
-
-                var book = Context.Books.Find(bookId);
-                if (book is not null)
-                {
-                    book.Ordered = true;
-                }
-
-                Context.SaveChanges();
-                return Ok("Ordered");
-            }
-            return Ok("Can not order");
-        }
+    
 
         [Authorize]
         [HttpPost("AddCategory")]
@@ -100,6 +71,22 @@ namespace Library_managment_system_API.Controllers
             Context.Books.Add(book);
             Context.SaveChanges();
             return Ok("inserted");
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteBook")]
+        public IActionResult DeleteBook(int id)
+        {
+            var exists = Context.Books.Any(bc => bc.Id == id);
+            if(exists)
+            {
+                var book = Context.Books.Find(id);
+                Context.Books.Remove(book!);
+                Context.SaveChanges();
+                return Ok("deleted");
+            }
+            return NotFound();
+
         }
     }
 }

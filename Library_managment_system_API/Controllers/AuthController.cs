@@ -1,4 +1,5 @@
 ﻿using Library_managment_system_API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace Library_managment_system_API.Controllers
             user.AccountStatus = AccountStatus.UNAPROVED;
             user.UserType = UserType.STUDENT;
             user.CreatedOn = DateTime.Now;
-            
+
 
             ContextDb.Users.Add(user);
             ContextDb.SaveChanges();
@@ -56,7 +57,7 @@ namespace Library_managment_system_API.Controllers
 
 
         [HttpGet("Login")]
-        public IActionResult Login(string email, string password )
+        public IActionResult Login(string email, string password)
         {
             if (ContextDb.Users.Any(us => us.Email.Equals(email) && us.Password.Equals(password)))
             {
@@ -67,10 +68,50 @@ namespace Library_managment_system_API.Controllers
                     return Ok("Not approved");
                 }
                 return Ok(JWTServices.GenerateToken(user));
-            
+
             }
             return Ok("not found");
-            
+
+        }
+        [Authorize]
+        [HttpGet("GetUsers")]
+        public IActionResult GetUsers()
+        {
+            var returnsUser = ContextDb.Users.ToList();
+            return Ok(returnsUser);
+        }
+
+        [Authorize]
+        [HttpGet("ApproveRequest")]
+        public IActionResult ApproveRequest(int userId)
+        {
+            var user = ContextDb.Users.Find(userId);
+
+            if (user is not null)
+            {
+                if (user.AccountStatus == AccountStatus.UNAPROVED)
+                {
+                    user.AccountStatus = AccountStatus.ACTIVE;
+                    ContextDb.SaveChanges();
+                }
+
+                EmailService.SendingMail
+                    (user.Email, "Account Approved", $""" 
+                <html>
+                  <body>
+                     <h2>
+                      Hi, {user.FirstName} {user.LastName}
+                     </h2>
+
+                     <h3>
+                     Your Account Has been approoved by Admin. You are ready for Login.
+                     </h3>
+                  </body>
+                </html>
+                """);
+                return Ok("Approved");
+            }
+            return Ok("not approved");
         }
 
 
