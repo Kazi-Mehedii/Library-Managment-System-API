@@ -71,7 +71,7 @@ namespace Library_managment_system_API.Controllers
         [HttpGet("ReturnBook")]
         public IActionResult ReturnBook(int userId, int bookId, int fine)
         {
-            var orders = ContextDb.Orders.SingleOrDefault(or => or.UserId == userId && or.BookId == bookId);
+            var orders = ContextDb.Orders.FirstOrDefault(or => or.UserId == userId && or.BookId == bookId);
 
             if (orders is not null)
             {
@@ -90,6 +90,19 @@ namespace Library_managment_system_API.Controllers
 
             return Ok("Not Returned");
 
+        }
+
+        [Authorize]
+        [HttpGet("GetOrders")]
+        public IActionResult GetOrders()
+        {
+            var order = ContextDb.Orders.Include(o => o.User).Include(o => o.Book).ToList();
+
+            if (order.Any())
+            {
+                return Ok(order);
+            }
+            else { return NotFound(); }
         }
     }
 }
